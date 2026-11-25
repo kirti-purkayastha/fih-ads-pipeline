@@ -9,8 +9,9 @@ An end-to-end, **traceable and independently quality-controlled** analysis pipel
 **Author:** Kirti Purkayastha
 
 ## Run it
-
+R 4.3+
 ``` bash
+Rscript -e 'install.packages(c("dplyr","tidyr","purrr","tibble","ggplot2","plotly","shiny","testthat","yaml","jsonlite","scales"))'
 Rscript run_pipeline.R --regen     # simulate raw data, build ADaM, QC, outputs (about 10 s)
 Rscript tests/testthat.R           # 40 tests, including seeded-error detection
 Rscript -e 'shiny::runApp("app")'  # interactive exploration layer
