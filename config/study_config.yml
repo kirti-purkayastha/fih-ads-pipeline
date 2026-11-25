@@ -1,0 +1,26 @@
+# Study configuration for the SYNTHETIC first-in-human study ROC-FIH-SYN-001
+# Every analysis parameter lives here so that nothing is hard-coded in derivation code.
+study_id: ROC-FIH-SYN-001
+seed: 20261124
+doses_mg: [10, 30, 100, 300, 600, 900]
+cohort_sizes: [3, 3, 6, 6, 6, 6]
+first_dose_date: "2025-03-03"
+cohort_stagger_days: 45
+cycle_length_days: 21
+dlt_window_days: 21
+safety_window_days: 30
+data_cut_date: "2026-03-31"
+amendment1_date: "2025-09-01"     # protocol amendment 1 adds exploratory ctDNA endpoint
+pk:
+  hours: [0, 1, 4, 24, 72, 168, 336, 504]
+  lloq_ng_ml: 50
+  lamz_min_points: 3
+  lamz_min_r2adj: 0.8
+tumor:
+  assessment_days: [43, 85, 127, 169, 211, 253]
+  pr_threshold_pct: -30
+  pd_threshold_pct: 20
+  pd_min_abs_mm: 5
+biomarker:
+  cxcl10_lloq_pg_ml: 10
+  ctdna_lloq_pct: 0.05

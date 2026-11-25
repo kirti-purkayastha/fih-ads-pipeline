@@ -1,0 +1,15 @@
+[2026-11-24 19:26:37] Pipeline start | study ROC-FIH-SYN-001 | seed 20261124
+[2026-11-24 19:26:38] Synthetic raw data written to data/raw (30 subjects)
+[2026-11-24 19:26:40] ADSL written: 30 rows x 28 cols
+[2026-11-24 19:26:40] ADAE written: 87 rows x 23 cols
+[2026-11-24 19:26:40] ADLB written: 1585 rows x 24 cols
+[2026-11-24 19:26:40] ADPC written: 240 rows x 18 cols
+[2026-11-24 19:26:40] ADPP written: 330 rows x 10 cols
+[2026-11-24 19:26:40] ADBM written: 233 rows x 25 cols
+[2026-11-24 19:26:40] ADTR written: 130 rows x 22 cols
+[2026-11-24 19:26:40] ADRS written: 30 rows x 13 cols
+[2026-11-24 19:26:40] QC compare ADSL         MATCH (30 obs, 11 vars)
+[2026-11-24 19:26:40] QC compare ADPP (NCA)   MATCH (202 obs, 1 vars)
+[2026-11-24 19:26:40] QC compare ADRS         MATCH (30 obs, 5 vars)
+[2026-11-24 19:26:40] Data integrity checks: 62 run, 62 passed, 0 failed
+[2026-11-24 19:26:42] Report written: output/study_summary.md

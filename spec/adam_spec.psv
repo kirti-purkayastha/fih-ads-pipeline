@@ -1,0 +1,164 @@
+dataset|variable|label|type|source|derivation
+ADSL|STUDYID|Study Identifier|text|DM.STUDYID|Copied from DM
+ADSL|USUBJID|Unique Subject Identifier|text|DM.USUBJID|Copied from DM
+ADSL|SUBJID|Subject Identifier for the Study|text|DM.SUBJID|Copied from DM
+ADSL|SITEID|Study Site Identifier|text|DM.SITEID|Copied from DM
+ADSL|COHORT|Dose Escalation Cohort|integer|DM.ARMCD|Numeric part of ARMCD (C1 -> 1)
+ADSL|TRT01P|Planned Treatment for Period 01|text|DM.ARM|Copied from DM.ARM
+ADSL|TRT01PN|Planned Dose (mg)|integer|DM.ARM|Dose parsed from ARM text (e.g. DRUGX 100 mg Q3W -> 100)
+ADSL|TRT01A|Actual Treatment for Period 01|text|EX.EXDOSE|DRUGX <first administered EXDOSE> mg Q3W; missing if never dosed
+ADSL|TRT01AN|Actual Dose (mg)|integer|EX.EXDOSE|EXDOSE of first administration (ordered by EXSTDTC)
+ADSL|AGE|Age (years)|integer|DM.AGE|Copied from DM
+ADSL|AGEGR1|Pooled Age Group 1|text|DM.AGE|>=65 if AGE>=65 else <65 (SAP 3.1)
+ADSL|SEX|Sex|text|DM.SEX|Copied from DM
+ADSL|RACE|Race|text|DM.RACE|Copied from DM
+ADSL|ECOG|ECOG Performance Status at Baseline|integer|DM.ECOG|Copied from DM
+ADSL|TUMTYPE|Primary Tumour Type|text|DM.TUMTYPE|Copied from DM
+ADSL|TRTSDT|Date of First Exposure to Treatment|date|EX.EXSTDTC|Date part of earliest EXSTDTC (SAP 4.1)
+ADSL|TRTSDTM|Datetime of First Exposure to Treatment|datetime|EX.EXSTDTC|Earliest EXSTDTC as datetime (UTC)
+ADSL|TRTEDT|Date of Last Exposure to Treatment|date|EX.EXSTDTC|Date part of latest EXSTDTC
+ADSL|NDOSES|Number of Doses Received|integer|EX|Count of EX records per subject
+ADSL|CUMDOSE|Cumulative Dose (mg)|float|EX.EXDOSE|Sum of EXDOSE
+ADSL|TRTDURD|Treatment Duration (Days)|integer|Derived|TRTEDT - TRTSDT + 1
+ADSL|EOSDT|End of Treatment Date|date|DS.DSSTDTC|Date part of DSSTDTC (data cut-off date for ongoing subjects)
+ADSL|EOSSTT|End of Treatment Status|text|DS.DSDECOD|ONGOING / COMPLETED / DISCONTINUED mapped from DSDECOD
+ADSL|DCSREAS|Reason for Discontinuation|text|DS.DSDECOD|Copied from DSDECOD
+ADSL|SAFFL|Safety Population Flag|text|Derived|Y if at least one dose received (SAP 3.1)
+ADSL|PKFL|PK Population Flag|text|PC|Y if >=1 quantifiable post-dose concentration (SAP 3.2)
+ADSL|DLTFL|Dose-Limiting Toxicity Flag|text|ADAE.DLTFL|Y if any ADAE record has DLTFL = Y
+ADSL|DLTEVLFL|DLT-Evaluable Population Flag|text|Derived|Y if SAFFL = Y and (DLTFL = Y or >=21 days from first dose to EOSDT) (SAP 3.3)
+ADAE|STUDYID|Study Identifier|text|AE.STUDYID|Copied from AE
+ADAE|USUBJID|Unique Subject Identifier|text|AE.USUBJID|Copied from AE
+ADAE|AESEQ|Sequence Number|integer|AE.AESEQ|Copied from AE
+ADAE|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADAE|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADAE|AETERM|Reported Term for the Adverse Event|text|AE.AETERM|Copied from AE (verbatim)
+ADAE|AEDECOD|Dictionary-Derived Term|text|AE.AEDECOD|Copied from AE (MedDRA PT)
+ADAE|AESTDTC|Start Date/Time of Adverse Event (raw)|text|AE.AESTDTC|Copied from AE (may be partial)
+ADAE|ASTDT|Analysis Start Date|date|AE.AESTDTC|Partial date YYYY-MM imputed to first of month; if same month as TRTSDT use TRTSDT (SAP 6.2)
+ADAE|ASTDTF|Analysis Start Date Imputation Flag|text|Derived|D if day imputed; M if month imputed; blank if complete
+ADAE|AENDT|Analysis End Date|date|AE.AEENDTC|Date part of AEENDTC; missing if ongoing
+ADAE|ASTDY|Analysis Start Relative Day|integer|Derived|Study day of ASTDT vs TRTSDT (no day 0)
+ADAE|AENDY|Analysis End Relative Day|integer|Derived|Study day of AENDT vs TRTSDT (no day 0)
+ADAE|ATOXGR|Analysis Toxicity Grade|text|AE.AETOXGR|GRADE <AETOXGR>
+ADAE|ATOXGRN|Analysis Toxicity Grade (N)|integer|AE.AETOXGR|AETOXGR as integer
+ADAE|AESERFL|Serious Event Flag|text|AE.AESER|Copied from AESER
+ADAE|RELFL|Related to Study Drug Flag|text|AE.AEREL|Y if AEREL = RELATED
+ADAE|AEOUT|Outcome of Adverse Event|text|AE.AEOUT|Copied from AE
+ADAE|TRTEMFL|Treatment-Emergent Flag|text|Derived|Y if TRTSDT <= ASTDT <= TRTEDT + 30 days (SAP 6.1)
+ADAE|AESIFL|Adverse Event of Special Interest Flag|text|AE.AEDECOD|Y if PT is cytokine release syndrome or infusion related reaction
+ADAE|DLTFL|Dose-Limiting Toxicity Flag|text|Derived|Y if TEAE, grade>=3, related, and ASTDY <= 21 (SAP 6.3)
+ADAE|AOCCFL|1st Occurrence of Any TEAE Flag|text|Derived|Y for first TEAE per subject ordered by ASTDT and AESEQ
+ADAE|AOCCPFL|1st Occurrence of PT TEAE Flag|text|Derived|Y for first TEAE per subject and AEDECOD
+ADLB|STUDYID|Study Identifier|text|LB.STUDYID|Copied from LB
+ADLB|USUBJID|Unique Subject Identifier|text|LB.USUBJID|Copied from LB
+ADLB|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADLB|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADLB|LBSEQ|Sequence Number|integer|LB.LBSEQ|Copied from LB
+ADLB|PARAMCD|Parameter Code|text|LB.LBTESTCD|Copied from LBTESTCD
+ADLB|PARAM|Parameter|text|LB.LBTEST|LBTEST followed by standard unit in brackets
+ADLB|AVISIT|Analysis Visit|text|LB.VISIT|Copied from VISIT
+ADLB|AVISITN|Analysis Visit (N)|integer|LB.VISITNUM|Copied from VISITNUM
+ADLB|ADT|Analysis Date|date|LB.LBDTC|Date part of LBDTC
+ADLB|ADY|Analysis Relative Day|integer|Derived|Study day of ADT vs TRTSDT (no day 0)
+ADLB|AVAL|Analysis Value (standard units)|float|LB.LBORRES|LBORRES; haemoglobin g/dL multiplied by 10 to g/L (SAP 7.1)
+ADLB|AVALU|Analysis Value Unit|text|Derived|Standard unit (HGB in g/L)
+ADLB|ANRLO|Analysis Normal Range Lower Limit|float|LB.LBSTNRLO|LBSTNRLO with same unit conversion as AVAL
+ADLB|ANRHI|Analysis Normal Range Upper Limit|float|LB.LBSTNRHI|LBSTNRHI with same unit conversion as AVAL
+ADLB|ANRIND|Analysis Reference Range Indicator|text|Derived|LOW if AVAL<ANRLO; HIGH if AVAL>ANRHI; else NORMAL
+ADLB|BASE|Baseline Value|float|Derived|AVAL of baseline record (last non-missing on or before TRTSDT)
+ADLB|BNRIND|Baseline Reference Range Indicator|text|Derived|ANRIND of baseline record
+ADLB|CHG|Change from Baseline|float|Derived|AVAL - BASE for post-baseline records
+ADLB|PCHG|Percent Change from Baseline|float|Derived|100 * CHG / BASE
+ADLB|SHIFT1|Shift from Baseline Reference Range|text|Derived|BNRIND to ANRIND for post-baseline records
+ADLB|ABLFL|Baseline Record Flag|text|Derived|Y for last non-missing value on or before TRTSDT (SAP 7.2)
+ADLB|LBORRES|Result in Original Units|float|LB.LBORRES|Copied from LB (traceability)
+ADLB|LBORRESU|Original Units|text|LB.LBORRESU|Copied from LB (traceability)
+ADPC|STUDYID|Study Identifier|text|PC.STUDYID|Copied from PC
+ADPC|USUBJID|Unique Subject Identifier|text|PC.USUBJID|Copied from PC
+ADPC|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADPC|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADPC|PCSEQ|Sequence Number|integer|PC.PCSEQ|Copied from PC
+ADPC|PARAMCD|Parameter Code|text|Derived|DRUGX
+ADPC|PARAM|Parameter|text|Derived|DRUGX serum concentration (ng/mL)
+ADPC|AVISIT|Analysis Visit|text|Derived|CYCLE 1 for all PK profile records
+ADPC|ATPT|Analysis Timepoint|text|PC.PCTPT|Label derived from nominal time
+ADPC|ATPTN|Analysis Timepoint (N)|float|PC.PCTPT|Nominal hours post start of infusion
+ADPC|ADTM|Analysis Datetime|datetime|PC.PCDTC|PCDTC as datetime (UTC)
+ADPC|ARELTM|Actual Time from First Dose (h)|float|Derived|(ADTM - ADSL.TRTSDTM) in hours, rounded to 2 dp
+ADPC|AVAL|Analysis Value (ng/mL)|float|PC.PCORRES|Numeric PCORRES; BLQ set to 0; not-done missing (SAP 5.1)
+ADPC|AVALU|Analysis Value Unit|text|PC.PCORRESU|Copied from PCORRESU
+ADPC|LLOQ|Lower Limit of Quantification|float|PC.PCLLOQ|Copied from PC
+ADPC|BLQFL|Below Limit of Quantification Flag|text|PC.PCORRES|Y if PCORRES starts with <; missing if not done
+ADPC|PCORRES|Result in Original Units|text|PC.PCORRES|Copied from PC (traceability)
+ADPC|ANL01FL|Analysis Flag 01|text|Derived|Y if AVAL is not missing
+ADPP|STUDYID|Study Identifier|text|Config|study_id from study configuration
+ADPP|USUBJID|Unique Subject Identifier|text|ADPC.USUBJID|Subjects with PKFL = Y
+ADPP|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADPP|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADPP|PARAMN|Parameter (N)|integer|Derived|Parameter order
+ADPP|PARAMCD|Parameter Code|text|Derived|NCA parameter code
+ADPP|PARAM|Parameter|text|Derived|NCA parameter name
+ADPP|AVAL|Analysis Value|float|ADPC.AVAL|NCA of cycle 1 profile using ARELTM (times <0 set to 0); see SAP 5.2
+ADPP|AVALU|Analysis Value Unit|text|Derived|Unit of the parameter
+ADPP|AVISIT|Analysis Visit|text|Derived|CYCLE 1
+ADBM|STUDYID|Study Identifier|text|Config|study_id from study configuration
+ADBM|USUBJID|Unique Subject Identifier|text|BM.usubjid|Copied from BM (JSON)
+ADBM|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADBM|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADBM|SAMPID|Sample Identifier|text|BM.sample.id|Flattened from nested JSON
+ADBM|PARAMCD|Parameter Code|text|BM.assay.analyte|CXCL10 or CTDNAVAF
+ADBM|PARAM|Parameter|text|BM.assay.analyte|Parameter description with unit
+ADBM|AVISIT|Analysis Visit|text|BM.sample.nominal_visit|Copied from nominal_visit
+ADBM|ADTM|Analysis Datetime|datetime|BM.sample.collected|Collection datetime (UTC)
+ADBM|ARELTM|Actual Time from First Dose (h)|float|Derived|(ADTM - ADSL.TRTSDTM) in hours, rounded to 2 dp
+ADBM|AVAL|Analysis Value|float|BM.result|CXCL10: result.value; ctDNA: max of result.variants[].vaf; BLQ -> LLOQ/2 (SAP 8.2)
+ADBM|AVALU|Analysis Value Unit|text|BM.assay.unit|Copied from assay.unit
+ADBM|LLOQ|Lower Limit of Quantification|float|BM.assay.lloq|Copied from assay.lloq
+ADBM|BLQFL|Below Limit of Quantification Flag|text|BM.result.flag|Y if result.flag = BLQ
+ADBM|DTYPE|Derivation Type|text|Derived|LLOQ/2 when value imputed from BLQ
+ADBM|BASE|Baseline Value|float|Derived|AVAL of last non-missing record on or before TRTSDTM; missing if no baseline sample (e.g. pre-amendment ctDNA)
+ADBM|CHG|Change from Baseline|float|Derived|AVAL - BASE; missing if baseline missing or BLQ (SAP 8.3)
+ADBM|PCHG|Percent Change from Baseline|float|Derived|100 * CHG / BASE
+ADBM|R2BASE|Ratio to Baseline|float|Derived|AVAL / BASE (fold change)
+ADBM|ABLFL|Baseline Record Flag|text|Derived|Y for baseline record
+ADBM|BASEAVL|Baseline Available Flag|text|Derived|Y if BASE is not missing for subject and parameter
+ADBM|RUNID|Assay Run Identifier|text|BM.assay.run_id|Flattened from nested JSON
+ADBM|ANAME|Assay Name|text|BM.assay.name|Flattened from nested JSON
+ADBM|MATRIX|Sample Matrix|text|BM.sample.matrix|Flattened from nested JSON
+ADBM|NVAR|Number of Variants Called|integer|BM.result.variants|Length of nested variants array
+ADTR|STUDYID|Study Identifier|text|TR.STUDYID|Copied from TR
+ADTR|USUBJID|Unique Subject Identifier|text|TR.USUBJID|Copied from TR
+ADTR|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADTR|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADTR|TRSEQ|Sequence Number|integer|TR.TRSEQ|Copied from TR
+ADTR|PARAMCD|Parameter Code|text|Derived|SUMDIAM
+ADTR|PARAM|Parameter|text|Derived|Sum of diameters of target lesions (mm)
+ADTR|AVISIT|Analysis Visit|text|TR.VISIT|Copied from VISIT
+ADTR|AVISITN|Analysis Visit (N)|integer|TR.VISIT|0 for BASELINE; number from WKnn otherwise
+ADTR|ADT|Analysis Date|date|TR.TRDTC|Date of TRDTC
+ADTR|ADY|Analysis Relative Day|integer|Derived|Study day of ADT vs TRTSDT (no day 0)
+ADTR|AVAL|Analysis Value (mm)|float|TR.TRORRES|Copied from TRORRES
+ADTR|AVALU|Analysis Value Unit|text|TR.TRORRESU|Copied from TRORRESU
+ADTR|BASE|Baseline Value (mm)|float|Derived|Last non-missing AVAL on or before TRTSDT
+ADTR|CHG|Change from Baseline (mm)|float|Derived|AVAL - BASE for post-baseline records
+ADTR|PCHG|Percent Change from Baseline|float|Derived|100 * CHG / BASE
+ADTR|NADIR|Smallest Prior Value incl. Baseline (mm)|float|Derived|Minimum AVAL over all earlier records (SAP 9.1)
+ADTR|PCHGNAD|Percent Change from Nadir|float|Derived|100 * (AVAL - NADIR) / NADIR
+ADTR|ABSINC|Absolute Increase from Nadir (mm)|float|Derived|AVAL - NADIR
+ADTR|NEWLESFL|New Lesion Flag|text|TR.NEWLES|Copied from NEWLES
+ADTR|AVALC|Visit Response|text|Derived|PD if new lesion or PCHGNAD>=20 and ABSINC>=5 mm; else PR if PCHG<=-30; else SD (SAP 9.1)
+ADTR|ABLFL|Baseline Record Flag|text|Derived|Y for baseline record
+ADRS|STUDYID|Study Identifier|text|ADSL.STUDYID|Merged from ADSL
+ADRS|USUBJID|Unique Subject Identifier|text|ADSL.USUBJID|One record per subject
+ADRS|COHORT|Dose Escalation Cohort|integer|ADSL.COHORT|Merged from ADSL
+ADRS|TRT01PN|Planned Dose (mg)|integer|ADSL.TRT01PN|Merged from ADSL
+ADRS|PARAMCD|Parameter Code|text|Derived|BOR
+ADRS|PARAM|Parameter|text|Derived|Best overall response (unconfirmed)
+ADRS|AVALC|Best Overall Response|text|ADTR.AVALC|Best of PR > SD > PD across post-baseline visits; NE if none (SAP 9.2)
+ADRS|NASSESS|Number of Post-Baseline Assessments|integer|ADTR|Count of post-baseline ADTR records
+ADRS|BESTPCHG|Best Percent Change from Baseline|float|ADTR.PCHG|Minimum PCHG across post-baseline visits
+ADRS|BORDT|Date of Best Response|date|ADTR.ADT|Date of first visit achieving best response
+ADRS|BORADY|Study Day of Best Response|integer|Derived|Study day of BORDT vs TRTSDT
+ADRS|ORRFL|Objective Response Flag|text|Derived|Y if AVALC = PR
+ADRS|DCRFL|Disease Control Flag|text|Derived|Y if AVALC is PR or SD
