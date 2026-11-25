@@ -1,8 +1,15 @@
 # Phase I First-in-Human Exploratory Analysis Pipeline (R)
 
 ![CI](https://github.com/kirti-purkayastha/fih-ads-pipeline/actions/workflows/ci.yml/badge.svg)
+
+Dashboard demo gif: 
+
 ![Dashboard Demo Gif](docs/demo.gif)
+
+Click the thumbnail below 👇 for full dashboard walkthrough!
+
 [![Full Dashboard Walkthrough](https://img.youtube.com/vi/m8AaQ7fdGZQ/hqdefault.jpg)](https://youtu.be/m8AaQ7fdGZQ)
+
 An end-to-end, **traceable and independently quality-controlled** analysis pipeline for a *synthetic* first-in-human dose-escalation oncology study: raw SDTM-like data -\> ADaM-style analysis datasets -\> exploratory outputs -\> interactive viewer, driven by a mock SAP and a variable-level specification.
 
 > **All data are simulated.** No real patient data. Nothing here is a clinical conclusion.
